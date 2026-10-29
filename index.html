@@ -1,13 +1,203 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="fr">
+<head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="./style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pen</title>
-  </head>
-  <body>
+    <title>Pulse - Green Edition & Ads</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #06110e; color: #f8fafc; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* En-tête */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(6, 17, 14, 0.9); border-bottom: 1px solid #13382c; backdrop-filter: blur(10px); }
+        header h1 { font-size: 20px; background: linear-gradient(135deg, #22c55e, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
 
-    <script src="./script.js"></script>
-  </body>
+        /* Style du Score Pulse */
+        .pulse-score-badge { display: flex; align-items: center; gap: 6px; background: #091a15; border: 1px solid #10b981; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; color: #34d399; }
+
+        /* Conteneur principal */
+        .container { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; padding-bottom: 80px; }
+        
+        /* Panneau de configuration Vert */
+        .ai-panel { background: linear-gradient(135deg, #064e3b, #022c22); padding: 15px; border-radius: 14px; border: 1px solid #059669; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.2); }
+        .row-select { display: flex; justify-content: space-between; gap: 10px; }
+        .row-select select { background: #06110e; color: #fff; border: 1px solid #10b981; padding: 10px; border-radius: 8px; font-size: 13px; width: 100%; outline: none; }
+
+        /* Saisie du texte */
+        .card-box { background: #091a15; padding: 15px; border-radius: 12px; border: 1px solid #13382c; display: flex; flex-direction: column; gap: 8px; }
+        .card-box label { font-size: 12px; color: #34d399; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card-box textarea { width: 100%; background: transparent; color: #fff; border: none; outline: none; resize: none; height: 90px; font-size: 15px; }
+
+        /* Bouton Magique Vert */
+        .ai-btn { background: linear-gradient(135deg, #22c55e, #14b8a6); color: #06110e; border: none; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 15px; cursor: pointer; transition: transform 0.1s, opacity 0.2s; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); }
+        .ai-btn:active { transform: scale(0.98); opacity: 0.9; }
+
+        /* Boîte de Résultat */
+        .result-box { background: #091a15; padding: 15px; border-radius: 12px; border: 1px solid #13382c; display: flex; flex-direction: column; gap: 12px; }
+        .result-header { display: flex; justify-content: space-between; align-items: center; }
+        .result-text { color: #34d399; font-size: 16px; word-break: break-word; line-height: 1.4; }
+        
+        /* Badge d'humeur */
+        .mood-badge { display: inline-block; background: rgba(34, 197, 94, 0.1); color: #4ade80; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(34, 197, 94, 0.3); margin-bottom: 5px; }
+
+        .actions-bar { display: flex; gap: 8px; }
+        .action-btn { background: #0f2922; border: 1px solid #13382c; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+        .action-btn:active { background: #13382c; }
+
+        /* Encadré Publicitaire (Monétisation) */
+        .ad-banner { background: linear-gradient(135deg, #091a15, #0f2922); border: 1px dashed #10b981; padding: 12px; border-radius: 10px; text-align: center; display: flex; flex-direction: column; gap: 4px; margin-top: 5px; }
+        .ad-tag { font-size: 10px; color: #f59e0b; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
+        .ad-content { font-size: 13px; color: #cbd5e1; }
+    </style>
+</head>
+<body>
+
+    <!-- En-tête avec Score Pulse -->
+    <header>
+        <h1>Pulse AI</h1>
+        <div class="pulse-score-badge">
+            <span>⚡</span> Score: <span id="pulse-score">999,840</span>
+        </div>
+    </header>
+
+    <!-- Corps de l'application -->
+    <div class="container">
+        
+        <!-- Panneau de configuration -->
+        <div class="ai-panel">
+            <div style="font-size: 13px; color: #e2e8f0; font-weight: bold;">🧠 Paramètres de traduction IA :</div>
+            <div class="row-select">
+                <div>
+                    <label style="font-size: 10px; color: #a7f3d0; display: block; margin-bottom: 2px;">LANGUE SOURCE</label>
+                    <select id="source-lang">
+                        <option value="fr">Français</option>
+                        <option value="en">Anglais</option>
+                        <option value="es">Espagnol</option>
+                        <option value="ar">Arabe</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 10px; color: #a7f3d0; display: block; margin-bottom: 2px;">STYLE DE TRADUCTION</label>
+                    <select id="style-mode">
+                        <option value="street">🔥 Mode Slang / Rue (Ultra branché)</option>
+                        <option value="pro">💼 Professionnel & Élégant</option>
+                        <option value="poetic">🌌 Poétique & Profond</option>
+                        <option value="direct">⚡ Standard Rapide</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saisie du texte -->
+        <div class="card-box">
+            <label>Qu'est-ce qu'on traduit aujourd'hui ?</label>
+            <textarea id="input-text" placeholder="Écris une phrase ici... (Ex: Salut mon frère, on va réussir ce projet ensemble)"></textarea>
+        </div>
+
+        <!-- Bouton magique -->
+        <button class="ai-btn" onclick="traduireAvecIAUnique()">✨ Lancer l'Analyse & Traduction IA</button>
+
+        <!-- Résultat -->
+        <div class="result-box">
+            <div>
+                <div class="result-header">
+                    <div>
+                        <span id="mood-indicator" class="mood-badge">🤖 IA en attente</span>
+                        <div style="font-size: 11px; color: #64748b;">Résultat optimisé par Pulse</div>
+                    </div>
+                    <div class="actions-bar">
+                        <button class="action-btn" onclick="copierTexte()">📋</button>
+                        <button class="action-btn" onclick="lireTexte()">🔊</button>
+                    </div>
+                </div>
+                <div id="output-text" class="result-text" style="margin-top: 8px;">Le résultat unique apparaîtra ici...</div>
+            </div>
+        </div>
+
+        <!-- Espace Publicitaire (Pour générer de l'argent 💰) -->
+        <div class="ad-banner">
+            <span class="ad-tag">📢 Espace Sponsorisé (Publicité)</span>
+            <div class="ad-content">🚀 Envie de booster tes projets ? Découvre les meilleurs outils de dev gratuits !</div>
+        </div>
+
+    </div>
+
+    <script>
+        let derniereTraduction = "";
+        let scoreActuel = 999840;
+
+        async function traduireAvecIAUnique() {
+            const texte = document.getElementById('input-text').value.trim();
+            const src = document.getElementById('source-lang').value;
+            const style = document.getElementById('style-mode').value;
+            const sortie = document.getElementById('output-text');
+            const moodBadge = document.getElementById('mood-indicator');
+
+            if (texte === "") {
+                sortie.innerText = "⚠️ Écris d'abord un texte à transformer !";
+                moodBadge.innerText = "⚠️ Attention";
+                derniereTraduction = "";
+                return;
+            }
+
+            // Augmente le score à chaque utilisation
+            scoreActuel += 15;
+            document.getElementById('pulse-score').innerText = scoreActuel.toLocaleString();
+
+            sortie.innerText = "⚡ L'IA analyse les vibrations de ton texte...";
+            moodBadge.innerText = "🔮 Analyse en cours...";
+            derniereTraduction = "";
+
+            try {
+                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texte)}&langpair=${src}|en`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data && data.responseData) {
+                    let baseTranslation = data.responseData.translatedText;
+                    
+                    if (style === 'street') {
+                        derniereTraduction = `Yo family! 🚀 Here is the vibe: "${baseTranslation}" - No cap, pure energy! 🔥`;
+                        moodBadge.innerText = "🔥 Vibe : Street & Hype";
+                    } else if (style === 'pro') {
+                        derniereTraduction = `Enterprise formulation: "${baseTranslation}". Executed with maximum precision.`;
+                        moodBadge.innerText = "💼 Vibe : Corporate Elite";
+                    } else if (style === 'poetic') {
+                        derniereTraduction = `Dans les méandres du temps, il est dit : "${baseTranslation}". ✨`;
+                        moodBadge.innerText = "🌌 Vibe : Poétique";
+                    } else {
+                        derniereTraduction = baseTranslation;
+                        moodBadge.innerText = "⚡ Vibe : Standard Direct";
+                    }
+
+                    sortie.innerText = derniereTraduction;
+                } else {
+                    sortie.innerText = "❌ Erreur dans l'analyse de l'IA.";
+                }
+            } catch (error) {
+                sortie.innerText = "❌ Connexion aux serveurs IA impossible.";
+                moodBadge.innerText = "❌ Erreur réseau";
+            }
+        }
+
+        function lireTexte() {
+            if (!derniereTraduction || derniereTraduction.startsWith("⚠️") || derniereTraduction.startsWith("❌")) {
+                alert("Rien à écouter pour l'instant !");
+                return;
+            }
+            const utterance = new SpeechSynthesisUtterance(derniereTraduction);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function copierTexte() {
+            if (!derniereTraduction) {
+                alert("Rien à copier !");
+                return;
+            }
+            navigator.clipboard.writeText(derniereTraduction);
+            alert("Copié dans le presse-papier ! 🚀");
+        }
+    </script>
+</body>
 </html>
